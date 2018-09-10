@@ -1,14 +1,19 @@
-var model = require("../model");
+"use strict";
+
+const model = require('../model');
+const IpLocationService = require('./ipLocationService');
 
 class ApiService{
     addSurveySubmit(surveySubmit){
-        console.log(surveySubmit);
+        let locationService = new IpLocationService();
+        let city = locationService.findCityByIp(surveySubmit.ip);
+        // console.log(city);
+        return city;
     }
 
-    querySurvaySubmitsByName(name){
-        console.log(name);
+    querySurveySubmitsByName(name){
         let surveySubmit = new model.SurveySubmit({});
-        console.log(surveySubmit);
+        // console.log(surveySubmit);
         return surveySubmit;
     }
 }

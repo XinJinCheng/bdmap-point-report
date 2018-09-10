@@ -1,25 +1,21 @@
-var express = require('express');
-var router = express.Router();
+let express = require('express');
+let router = express.Router();
 
-var service = require('../app/service');
+let service = require('../app/service');
 
-router.post('/survaySubmit', function(req, res, next) {
+router.post('/surveySubmit', function(req, res, next) {
 
-  var surveySubmit = req.body;
-  console.log(surveySubmit);
-
-  var apiService = new service.ApiService();
-  apiService.addSurveySubmit(surveySubmit);
-  res.sendStatus(200);
+  let surveySubmit = req.body;
+  let apiService = new service.ApiService();
+  let ret = apiService.addSurveySubmit(surveySubmit);
+  res.send(ret);
 });
 
-router.get('/survaySubmit/findByName', function(req, res, next) {
+router.get('/surveySubmit/findByName', function(req, res, next) {
 
-  var apiService = new service.ApiService();
-  var survaySubmit = apiService.querySurvaySubmitsByName(req.query.name);
-  console.log(req.query);
-  // res.sendStatus(200);
-  res.send(JSON.stringify(survaySubmit));
+  let apiService = new service.ApiService();
+  let surveySubmit = apiService.querySurvaySubmitsByName(req.query.name);
+  res.send(JSON.stringify(surveySubmit));
 });
 
 module.exports = router;
