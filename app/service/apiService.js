@@ -7,9 +7,13 @@ const MariadbClient = require('mariasql');
 const logger = require('./logService')('apiService.js');
 
 class ApiService {
-    addSurveySubmit(params) {
 
-        let ret = false;
+    constructor(responsor){
+        this.responsor = responsor;
+        // logger.debug(responsor);
+    }
+
+    addSurveySubmit(params) {
 
         logger.debug(params);
 
@@ -49,18 +53,19 @@ class ApiService {
         //     logger.error(e);
         // });
 
+        let _this = this;
+        // logger.debug(_this)
         client.query(insertTemplate(surveySubmit), function (e, rows) {
             if (e) {
                 logger.error(e);
+                _this.responsor.sendResponse(400, e);
             }else{
                 logger.debug(rows);
-                ret = true;
+                _this.responsor.sendResponse(200, rows);
             }
         });
 
         client.end();
-
-        return ret;
     }
 
     querySurveySubmitsByName(name) {

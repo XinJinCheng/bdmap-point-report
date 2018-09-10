@@ -7,18 +7,18 @@ const logger = service.getLogger('api.js');
 router.post('/surveySubmit', function (req, res, next) {
 
   let surveySubmit = req.body;
-  let apiService = new service.ApiService();
+  let responseService = new service.ResponseService(res);
+  let apiService = new service.ApiService(responseService);
 
   apiService.addSurveySubmit(surveySubmit);
-  res.sendStatus(200);
-    
+  // res.sendStatus(200);
 });
 
 router.get('/surveySubmit/findByName', function (req, res, next) {
 
-  let apiService = new service.ApiService();
+  let apiService = new service.ApiService(sendResponse);
   let surveySubmit = apiService.querySurveySubmitsByName(req.query.name);
-  res.send(JSON.stringify(surveySubmit));
+  // res.send(JSON.stringify(surveySubmit));
 });
 
 module.exports = router;

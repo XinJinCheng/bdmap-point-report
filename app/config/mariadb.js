@@ -3,8 +3,8 @@
 let mariadb = {
     host: '127.0.0.1',
     port: 3306,
-    user: 'root',
-    password: '1234abcd',
+    user: 'report',
+    password: '123456',
     db: 'survey_report',
     charset: 'utf8'
 }
