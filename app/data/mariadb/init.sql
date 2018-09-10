@@ -1,0 +1,12 @@
+
+CREATE DATABASE `survey_report` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci */;
+
+CREATE TABLE `submitted_location` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) DEFAULT NULL,
+  `ip` varchar(20) DEFAULT NULL,
+  `datetime` datetime DEFAULT NULL,
+  `city` varchar(50) DEFAULT NULL,
+  `location` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
