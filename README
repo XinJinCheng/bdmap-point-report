@@ -1,0 +1,4 @@
+1. for mariadb module need below SDK
+npm install --global --production windows-build-tools
+1. for development need nodemon
+npm install -g nodemon

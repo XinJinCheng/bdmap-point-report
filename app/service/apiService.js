@@ -58,7 +58,7 @@ class ApiService {
         client.query(insertTemplate(surveySubmit), function (e, rows) {
             if (e) {
                 logger.error(e);
-                _this.responsor.sendResponse(400, e);
+                _this.responsor.sendResponse(400, e.message);
             }else{
                 logger.debug(rows);
                 _this.responsor.sendResponse(200, rows);
