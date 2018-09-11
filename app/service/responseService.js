@@ -10,9 +10,9 @@ class ResponseService {
 
     sendResponse(code, o) {
         this.res.status(code);
-        logger.debug(code);
+        // logger.debug(code);
         this.res.json(o)
-        logger.debug(o);
+        // logger.debug(o);
 
     }
 

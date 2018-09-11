@@ -6,18 +6,31 @@ const logger = service.getLogger('api.js');
 
 router.post('/surveySubmit', function (req, res, next) {
 
-  let surveySubmit = req.body;
   let responseService = new service.ResponseService(res);
   let apiService = new service.ApiService(responseService);
 
+  let surveySubmit = req.body;
   apiService.addSurveySubmit(surveySubmit);
   // res.sendStatus(200);
 });
 
-router.get('/surveySubmit/findByName', function (req, res, next) {
+router.post('/surveySubmit/findByName', function (req, res, next) {
 
-  let apiService = new service.ApiService(sendResponse);
-  let surveySubmit = apiService.querySurveySubmitsByName(req.query.name);
+  let responseService = new service.ResponseService(res);
+  let apiService = new service.ApiService(responseService);
+  
+  let name = req.body.name
+  apiService.querySurveySubmitsByName(name);
+  // logger.debug(req.body);
+  // res.send(JSON.stringify(surveySubmit));
+});
+
+router.post('/surveySubmit/findAllGroupByName', function (req, res, next) {
+
+  let responseService = new service.ResponseService(res);
+  let apiService = new service.ApiService(responseService);
+
+  apiService.queryAllSurveySubmitsGroupByName();
   // res.send(JSON.stringify(surveySubmit));
 });
 

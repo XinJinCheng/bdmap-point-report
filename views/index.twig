@@ -58,6 +58,87 @@
             ]
         });
 
+        var options = {
+            draw: 'text',
+            avoid: true,
+            size: 14,
+            font: '18px Arial',
+            fillStyle: 'blue',
+            shadowColor: 'blue',
+            shadowBlur: 1
+        }
+
+        // create data set
+        var data = []
+        var dataSet = new mapv.DataSet(data);
+
+        // init mapvLayer
+        var mapvLayer = new mapv.baiduMapLayer(map, dataSet, options);
+
+
+        ////////////////////////////// main function //////////////////////////////
+
+        (function ($) {
+            $.getUrlParam = function (name) {
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                var r = window.location.search.substr(1).match(reg);
+                if (r != null) 
+                    return decodeURI(r[2]);
+                return null;
+            }
+        })(jQuery);
+
+        var surveyName = $.getUrlParam('name');
+        //console.log(surveyName);
+
+        //localhost:3000/api/surveySubmit/findByName?name=调查问卷02
+        //var dataUrl = "//" + window.location.host + "/api/surveySubmit/findByName";
+        //console.log(dataUrl);
+
+        refreshAsync();
+
+        function refreshAsync(){
+
+            $.ajax({
+                url: '/api/surveySubmit/findByName', 
+                method: 'POST',
+                data: JSON.stringify({name: surveyName}),
+                contentType : "application/json",
+    			dataType : "json", 
+                success: function(data, status, xhr){
+                    console.log(data);
+                    var pointData = surveyData2PointData(data);
+                    dataSet.set(pointData);
+                },
+                complete: function(xhr, status){
+                    setTimeout(refreshAsync, 10000);
+                    //console.log('star a new timeout call');
+                }
+            });
+        }
+
+        function surveyData2PointData(surveyData){
+            var mapData = [];
+
+            for (var i = 0; i < surveyData.length; i++) {
+
+                var cityCenter = mapv.utilCityCenter.getCenterByCityName(surveyData[i].city);
+                if(!cityCenter) continue;
+
+                mapData.push({
+                    geometry: {
+                        type: 'Point',
+                        coordinates: [cityCenter.lng, cityCenter.lat]
+                    }, 
+                    text: surveyData[i].count
+                });
+            }
+
+            return mapData;
+        }
+
+
+/*
         var citys = [
             "北京",
             "天津",
@@ -91,42 +172,9 @@
             "拉萨",
             "海口"
         ];
+*/
 
-        {# var options = {
-                splitList: {
-                    other: 'blue',
-                    1: 'green',
-                    2: 'yellow',
-                    3: 'red'
-                },
-                size: 5,
-                max: 30,
-                draw: 'category'
-            }
-            #}
-        var options = {
-            draw: 'text',
-            avoid: true,
-            size: 14,
-            font: '18px Arial',
-            fillStyle: 'blue',
-            shadowColor: 'blue',
-            shadowBlur: 1
-        }
-
-        // generate data
-        var data = generateData(citys);
-
-        // create data set
-        var allDataSet = new mapv.DataSet(data);
-        var dataSet = new mapv.DataSet(data);
-
-        // init mapvLayer
-        var mapvLayer = new mapv.baiduMapLayer(map, dataSet, options);
-
-        // init legend
-        {# initLegend(); #}
-
+/*
         // auto refresh data set
         setInterval(refresh, 3000);
 
@@ -146,39 +194,12 @@
                         type: 'Point',
                         coordinates: [cityCenter.lng, cityCenter.lat]
                     }, 
-                    {# count: parseInt(4 * Math.random()) #}
                     text: (4 * Math.random()).toFixed(0)
                 });
             }
 
             return data;
         }
-
-        function initLegend() {
-            /*        var legend = document.getElementById("legend");
-        if (legend != null) {
-            legend.remove();
-        }
 */
-            var legend = mapvLayer.getLegend();
-
-            legend.id = "legend";
-            legend.style.position = 'absolute';
-            legend.style.left = '10px';
-            legend.style.bottom = '50px';
-            document.body.appendChild(legend);
-
-            $(legend).delegate('div', 'click', function () {
-                var value = $(this).attr('value');
-                var data = allDataSet.get({
-                    filter: function (item) {
-                        if (item.count == value) {
-                            return true;
-                        }
-                    }
-                });
-                dataSet.set(data);
-            });
-        }
     </script>
 {% endblock %}
