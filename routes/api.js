@@ -25,12 +25,13 @@ router.post('/surveySubmit/findByName', function (req, res, next) {
   // res.send(JSON.stringify(surveySubmit));
 });
 
-router.post('/surveySubmit/findAllGroupByName', function (req, res, next) {
+router.post('/surveySubmit/findLatestN', function (req, res, next) {
 
   let responseService = new service.ResponseService(res);
   let apiService = new service.ApiService(responseService);
 
-  apiService.queryAllSurveySubmitsGroupByName();
+  let count = req.body.count
+  apiService.queryLatestSurveySubmits(count);
   // res.send(JSON.stringify(surveySubmit));
 });
 

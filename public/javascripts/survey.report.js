@@ -78,6 +78,7 @@ var mapvLayer = new mapv.baiduMapLayer(map, dataSet, options);
 })(jQuery);
 
 var surveyName = $.getUrlParam('name');
+$('#report_title_text').text(surveyName + '提交数量城市分布图');
 //console.log(surveyName);
 
 //localhost:3000/api/surveySubmit/findByName?name=调查问卷02
@@ -95,12 +96,12 @@ function refreshAsync() {
         contentType: "application/json",
         dataType: "json",
         success: function (data, status, xhr) {
-            console.log(data);
+            // console.log(data);
             var pointData = surveyData2PointData(data);
             dataSet.set(pointData);
         },
         complete: function (xhr, status) {
-            setTimeout(refreshAsync, 3000);
+            setTimeout(refreshAsync, 10 * 1000);
             //console.log('star a new timeout call');
         }
     });
@@ -128,6 +129,68 @@ function surveyData2PointData(surveyData) {
 
     return mapData;
 }
+
+
+$('#report_info_pad_list').bind('finished', onMarqueeFinished).marquee({ direction: 'up', speed: 50 });
+
+function onMarqueeFinished(){
+    $.ajax({
+        url: '/api/surveySubmit/findLatestN',
+        method: 'POST',
+        data: JSON.stringify({ count: 10 }),
+        contentType: "application/json",
+        dataType: "json",
+        success: function (data, status, xhr) {
+            // console.log(data);
+
+            var o = $('#report_info_pad_list');
+            o.marquee('destroy');
+
+            o.empty();
+            for(var i = 0; i < data.length; i++){
+                o.append('<li>' + data[i].datetime + ' ' + data[i].city + '</li>');
+                // console.log(data[i]);
+            }
+
+            o.bind('finished', onMarqueeFinished).marquee({direction: 'up', speed: 50});
+        },
+        complete: function (xhr, status) {
+            // setTimeout(refreshReportInfoPad, 3 * 1000);
+            //console.log('star a new timeout call');
+        }
+    });
+}
+
+// refreshReportInfoPad();
+
+// function refreshReportInfoPad() {
+//     $.ajax({
+//         url: '/api/surveySubmit/findLatestN',
+//         method: 'POST',
+//         data: JSON.stringify({ count: 10 }),
+//         contentType: "application/json",
+//         dataType: "json",
+//         success: function (data, status, xhr) {
+//             console.log(data);
+
+//             // var o = $('#report_info_pad_list');
+//             // o.marquee('destroy');
+
+//             // o.empty();
+//             // for(var i = 0; i < data.length; i++){
+//             //     o.append('<li>' + data[i].datetime + ' ' + data[i].city + '</li>');
+//             //     console.log(data[i]);
+//             // }
+
+//             // o.marquee({direction: 'up', duplicated: true, speed: 50});
+
+//         },
+//         complete: function (xhr, status) {
+//             // setTimeout(refreshReportInfoPad, 3 * 1000);
+//             //console.log('star a new timeout call');
+//         }
+//     });
+// }
 
 
 /*

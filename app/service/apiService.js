@@ -98,7 +98,7 @@ class ApiService {
             'WHERE s.`name` = :name AND s.`city` IS NOT NULL AND s.`city` != "" AND p.`x` IS NOT NULL AND p.`y` IS NOT NULL ' + 
             'GROUP BY `city`');
 
-        client.query(selectTemplate({name: name}), {useArray: true}, function (e, rows) {
+        client.query(selectTemplate({name: name}), function (e, rows) {
             if (e) {
                 logger.error(e);
                 _this.responsor.sendResponse(400, e.message);
@@ -107,55 +107,26 @@ class ApiService {
                 _this.responsor.sendResponse(200, rows);
             }
         });
-/*
-        let insertTemplate = client.prepare(
-            'INSERT INTO `submitted_location` ' +
-            '(`name`, `ip`, `datetime`, `city`, `location`) ' +
-            'VALUES (:name, :ip, :datetime, :city, :location)');
 
-        client.query(insertTemplate(surveySubmit), function (e, rows) {
-            if (e) {
-                logger.error(e);
-                _this.responsor.sendResponse(400, e.message);
-            }else{
-                logger.debug(rows);
-                _this.responsor.sendResponse(200, rows);
-            }
-        });
-*/
         client.end();
         
-        // let surveySubmit = new model.SurveySubmit({});
-        // console.log(surveySubmit);
-        // return surveySubmit;
     }
 
-    queryAllSurveySubmitsGroupByName() {
+    queryLatestSurveySubmits(count) {
 
         let _this = this;
         // logger.debug(_this)
 
         let client = new MariadbClient(config.MARIADB);
 
-        // let selectNames = 'SELECT DISTINCT `name` FROM `submitted_location`';
-        client.query(selectNames, null, {useArray: true}, function (e, rows) {
-            if (e) {
-                logger.error(e);
-                _this.responsor.sendResponse(400, e.message);
-            }else{
-                logger.debug(rows);
-                let names = [].concat.apply([], rows);
-                _this.responsor.sendResponse(200, names);
-
-            }
-        });
-/*
-        let insertTemplate = client.prepare(
-            'INSERT INTO `submitted_location` ' +
-            '(`name`, `ip`, `datetime`, `city`, `location`) ' +
-            'VALUES (:name, :ip, :datetime, :city, :location)');
-
-        client.query(insertTemplate(surveySubmit), function (e, rows) {
+        let selectTemplate = 
+        //client.prepare(
+            'SELECT `name`, `datetime`, `city`, `ip` FROM `submitted_location` ' + 
+            'WHERE `city` IS NOT NULL AND `city` != "" AND `datetime` IS NOT NULL ' + 
+            'ORDER BY `datetime` DESC, `id` DESC LIMIT ' + count;
+        //);
+        // logger.debug(selectTemplate);
+        client.query(selectTemplate, function (e, rows) {
             if (e) {
                 logger.error(e);
                 _this.responsor.sendResponse(400, e.message);
@@ -164,26 +135,11 @@ class ApiService {
                 _this.responsor.sendResponse(200, rows);
             }
         });
-*/
+
         client.end();
         
-        // let surveySubmit = new model.SurveySubmit({});
-        // console.log(surveySubmit);
-        // return surveySubmit;
     }
 
-    // insertOne(client){
-    //     let p = new Promise((resolve, reject) => {
-    //         client.query(insertTemplate(surveySubmit), function (e, rows) {
-    //             if (e) {
-    //                 reject(e);
-    //             }else{
-    //                 resolve(rows);
-    //             }
-    //         });
-    //     });
-    //     return p;
-    // }
 }
 
 module.exports = ApiService;
