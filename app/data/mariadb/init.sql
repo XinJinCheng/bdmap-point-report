@@ -45,8 +45,9 @@ CREATE TABLE IF NOT EXISTS `submitted_location` (
   `datetime` datetime DEFAULT NULL,
   `city` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `location` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=85 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  PRIMARY KEY (`id`),
+  KEY `datetime` (`datetime`,`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=89 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- Dumping data for table survey_report.submitted_location: ~5 rows (approximately)
 /*!40000 ALTER TABLE `submitted_location` DISABLE KEYS */;
@@ -59,3 +60,4 @@ CREATE TABLE IF NOT EXISTS `submitted_location` (
 
 CREATE USER IF NOT EXISTS 'report'@'localhost' IDENTIFIED BY '123456';
 GRANT ALL ON `survey_report`.* TO 'report'@'localhost';
+
