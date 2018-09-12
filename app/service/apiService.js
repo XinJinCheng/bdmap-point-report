@@ -35,7 +35,7 @@ class ApiService {
             '(`city`, `x`, `y`, `location`) ' +
             'VALUES (:city, :x, :y, :location)');
 
-        request('http://api.map.baidu.com/location/ip?ip=1.180.120.242&ak=4SUOswuyXWNUV5kSUGoxgQx4ms7lamxh&coor=bd09ll', 
+        request('http://api.map.baidu.com/location/ip?ip=' + params.ip + '&ak=4SUOswuyXWNUV5kSUGoxgQx4ms7lamxh&coor=bd09ll', 
             function (error, response, body) {
                 if (!error && response.statusCode == 200) {
                     // logger.debug(body) // Show the HTML for the baidu homepage.
