@@ -148,7 +148,7 @@ function onMarqueeFinished(){
 
             o.empty();
             for(var i = 0; i < data.length; i++){
-                o.append('<li>' + data[i].datetime + ' ' + data[i].city + '</li>');
+                o.append('<li>[' + data[i].datetime + '] ' + (data[i].student == null ? '匿名' : data[i].student) + ' ' + data[i].city + '</li>');
                 // console.log(data[i]);
             }
 

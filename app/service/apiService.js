@@ -27,8 +27,8 @@ class ApiService {
 
         let insertSubmittedLocationTemplate = client.prepare(
             'INSERT INTO `submitted_location` ' +
-            '(`name`, `ip`, `datetime`, `city`, `location`) ' +
-            'VALUES (:name, :ip, :datetime, :city, :location)');
+            '(`name`, `student`, `ip`, `datetime`, `city`, `location`) ' +
+            'VALUES (:name, :student, :ip, :datetime, :city, :location)');
 
         let insertCityPointTemplate = client.prepare(
             'INSERT INTO `city_point` ' +
@@ -42,17 +42,27 @@ class ApiService {
                     let jsonResult = JSON.parse(body);
                     // logger.debug(jsonResult);
                     if(jsonResult && jsonResult.status == 0){
+                        logger.debug(jsonResult.content.address);
+                        logger.debug(jsonResult.content.point);
                         // logger.debug(jsonResult.content.address_detail.city);
                         // logger.debug(jsonResult.content.point);
-                        client.query(insertCityPointTemplate({city: location.city, x: jsonResult.content.point.x, y: jsonResult.content.point.y, location: JSON.stringify(jsonResult)}), 
-                            function (e, rows) {
-                                if (e) {
-                                    logger.error(e);
-                                }else{
-                                    logger.debug('insertCityPointTemplate');
-                                    logger.debug(rows);
-                                }
+                        let cityPoint = new model.CityPoint({
+                            city: location.city, 
+                            x: jsonResult.content.point.x, 
+                            y: jsonResult.content.point.y, 
+                            location: JSON.stringify(jsonResult)
                         });
+                        client.query(insertCityPointTemplate(cityPoint), function (e, rows) {
+                            if (e) {
+                                logger.error(e);
+                            }else{
+                                // logger.debug('insertCityPointTemplate');
+                                logger.debug(cityPoint);
+                                // logger.debug(rows);
+                            }
+                        });
+                    }else{
+                        logger.debug(jsonResult.status);
                     }
                 }
             }
@@ -60,19 +70,21 @@ class ApiService {
         
         let surveySubmit = new model.SurveySubmit({
             name: params.name,
+            student: params.student,
             ip: params.ip,
             datetime: params.datetime,
             city: location.city,
             location: JSON.stringify(location.detail)
         });
+        logger.debug(surveySubmit);
         client.query(insertSubmittedLocationTemplate(surveySubmit), function (e, rows) {
             if (e) {
                 logger.error(e);
                 _this.responsor.sendResponse(400, e.message);
             }else{
-                logger.debug('insertSubmittedLocationTemplate');
-                logger.debug(rows);
-                _this.responsor.sendResponse(200, rows);
+                // logger.debug('insertSubmittedLocationTemplate');
+                // logger.debug(rows);
+                _this.responsor.sendResponse(200, surveySubmit);
             }
         });
 
@@ -121,7 +133,7 @@ class ApiService {
 
         let selectTemplate = 
         //client.prepare(
-            'SELECT `name`, `datetime`, `city`, `ip` FROM `submitted_location` ' + 
+            'SELECT `name`, `student`, `datetime`, `city`, `ip` FROM `submitted_location` ' + 
             'WHERE `city` IS NOT NULL AND `city` != "" AND `datetime` IS NOT NULL ' + 
             'ORDER BY `datetime` DESC, `id` DESC LIMIT ' + count;
         //);
@@ -131,7 +143,7 @@ class ApiService {
                 logger.error(e);
                 _this.responsor.sendResponse(400, e.message);
             }else{
-                logger.debug(rows);
+                // logger.debug(rows);
                 _this.responsor.sendResponse(200, rows);
             }
         });

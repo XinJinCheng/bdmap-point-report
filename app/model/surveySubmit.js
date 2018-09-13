@@ -5,6 +5,7 @@ class SurveySubmit {
     constructor(params) {
         this.id = params.id;
         this.name = params.name;
+        this.student = params.student;
         this.ip = params.ip;
         this.datetime = params.datetime;
         this.city = params.city;
