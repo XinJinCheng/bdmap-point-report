@@ -7,8 +7,7 @@
         <span id="report_title_text" style="font-size: 18pt;font-family: SimHei;">调研问卷全国分布图</span>
     </div>
     <div id="report_info_pad" style="position: fixed;right: 20px;bottom: 20px;width: 270px;height: 100px;/*! background: red; */">
-        <ul id="report_info_pad_list" style="list-style: none; margin:0px; padding:0px; overflow:hidden; height: 100px">
-        </ul>
+        <ul id="report_info_pad_list" style="list-style: none; margin:0px; padding:0px; overflow:hidden; height: 100px"></ul>
     </div>
 
     <script type="text/javascript" src="/javascripts/jquery.min.js"></script>
@@ -21,4 +20,13 @@
 
     <script type="text/javascript" src="/javascripts/survey.report.js"></script>
 
+    <script type="text/javascript" src="/javascripts/socket.io/socket.io.js"></script>
+
+    <script>
+        var socket = io.connect('http://localhost:3000');
+        socket.on('news', function (data) {
+            console.log(data);
+            socket.emit('my other event', {my: 'data'});
+        });
+    </script>
 {% endblock %}
