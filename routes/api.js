@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
 
+const controller = require('../app/controller');
 const service = require('../app/service');
 const logger = service.getLogger('api.js');
 
 router.post('/surveySubmit', function (req, res, next) {
 
-  let responseService = new service.ResponseService(res);
-  let apiService = new service.ApiService(responseService);
+  let apiService = new controller.ApiController(res);
 
   let surveySubmit = req.body;
   apiService.addSurveySubmit(surveySubmit);
@@ -16,8 +16,7 @@ router.post('/surveySubmit', function (req, res, next) {
 
 router.post('/surveySubmit/findByName', function (req, res, next) {
 
-  let responseService = new service.ResponseService(res);
-  let apiService = new service.ApiService(responseService);
+  let apiService = new controller.ApiController(res);
   
   let name = req.body.name
   apiService.querySurveySubmitsByName(name);
@@ -27,8 +26,7 @@ router.post('/surveySubmit/findByName', function (req, res, next) {
 
 router.post('/surveySubmit/findLatestN', function (req, res, next) {
 
-  let responseService = new service.ResponseService(res);
-  let apiService = new service.ApiService(responseService);
+  let apiService = new controller.ApiController(res);
 
   let count = req.body.count
   apiService.queryLatestSurveySubmits(count);

@@ -1,26 +1,34 @@
 "use strict";
 
 const model = require('../model');
-const IpLocationService = require('./ipLocationService');
+const service = require('../service');
 const config = require('../config');
 
 const MariadbClient = require('mariasql');
 const request = require("request");
 
-const logger = require('./logService')('apiService.js');
+const logger = service.getLogger('apiService.js');
 
-class ApiService {
+class ApiController {
 
-    constructor(responsor){
-        this.responsor = responsor;
-        // logger.debug(responsor);
+    constructor(res){
+        this.res = res;
+        // logger.debug(res);
+    }
+
+    sendResponse(code, o) {
+        this.res.status(code);
+        // logger.debug(code);
+        this.res.json(o)
+        // logger.debug(o);
+
     }
 
     addSurveySubmit(params) {
 
         let _this = this;
 
-        let locationService = new IpLocationService();
+        let locationService = new service.IpLocationService();
         let location = locationService.findCityByIp(params.ip);
 
         let client = new MariadbClient(config.MARIADB);
@@ -80,11 +88,11 @@ class ApiService {
         client.query(insertSubmittedLocationTemplate(surveySubmit), function (e, rows) {
             if (e) {
                 logger.error(e);
-                _this.responsor.sendResponse(400, e.message);
+                _this.sendResponse(400, e.message);
             }else{
                 // logger.debug('insertSubmittedLocationTemplate');
                 // logger.debug(rows);
-                _this.responsor.sendResponse(200, surveySubmit);
+                _this.sendResponse(200, surveySubmit);
             }
         });
 
@@ -98,7 +106,7 @@ class ApiService {
 
         //Only for test use
         if(!name){
-            _this.responsor.sendResponse(200, []);
+            _this.res.sendResponse(200, []);
             return;
         }
 
@@ -113,10 +121,10 @@ class ApiService {
         client.query(selectTemplate({name: name}), function (e, rows) {
             if (e) {
                 logger.error(e);
-                _this.responsor.sendResponse(400, e.message);
+                _this.sendResponse(400, e.message);
             }else{
                 // logger.debug(rows);
-                _this.responsor.sendResponse(200, rows);
+                _this.sendResponse(200, rows);
             }
         });
 
@@ -141,10 +149,10 @@ class ApiService {
         client.query(selectTemplate, function (e, rows) {
             if (e) {
                 logger.error(e);
-                _this.responsor.sendResponse(400, e.message);
+                _this.sendResponse(400, e.message);
             }else{
                 // logger.debug(rows);
-                _this.responsor.sendResponse(200, rows);
+                _this.sendResponse(200, rows);
             }
         });
 
@@ -154,4 +162,4 @@ class ApiService {
 
 }
 
-module.exports = ApiService;
+module.exports = ApiController;
