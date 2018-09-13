@@ -78,7 +78,7 @@ var mapvLayer = new mapv.baiduMapLayer(map, dataSet, options);
 })(jQuery);
 
 var surveyName = $.getUrlParam('name');
-$('#report_title_text').text(surveyName + '提交数量城市分布图');
+$('#report_title_text').text(surveyName + $('#report_title_text').text());
 //console.log(surveyName);
 
 //localhost:3000/api/surveySubmit/findByName?name=调查问卷02

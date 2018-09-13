@@ -8,7 +8,7 @@ let log4js = {
         file: {
             type: 'file',
             filename: 'logs/access.log',
-            maxLogSize: 1024,
+            maxLogSize: 1024000,
             backups: 4,
         }
     },
