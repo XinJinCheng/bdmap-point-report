@@ -15,8 +15,10 @@
     "ipip-datx": "^0.2.2",
     "log4js": "^3.0.5",
     "mariasql": "^0.2.6",
+    "mariasql-promise": "^2.0.0",
     "morgan": "~1.9.0",
     "request": "^2.88.0",
+    "request-promise": "^4.2.2",
     "twig": "~0.10.3"
   }
 }
