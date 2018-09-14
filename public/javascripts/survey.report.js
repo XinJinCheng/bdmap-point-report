@@ -1,6 +1,6 @@
 // 百度地图API功能
 var map = new BMap.Map("map", { enableMapClick: false }); // 创建Map实例
-map.centerAndZoom(new BMap.Point(105.403119, 38.028658), 6); // 初始化地图,设置中心点坐标和地图级别
+map.centerAndZoom(new BMap.Point(105.403119, 38.028658), 5); // 初始化地图,设置中心点坐标和地图级别
 map.enableScrollWheelZoom(true); // 开启鼠标滚轮缩放
 
 map.setMapStyle({
@@ -46,14 +46,15 @@ map.setMapStyle({
         }
     ]
 });
+map.setMapStyle({ style: 'midnight' });
 
 var options = {
     draw: 'text',
     avoid: true,
-    size: 14,
-    font: '18px Arial',
-    fillStyle: 'blue',
-    shadowColor: 'blue',
+    size: 16,
+    font: 'Courier New',
+    fillStyle: '#ff0',
+    shadowColor: '#f00',
     shadowBlur: 1
 }
 
@@ -77,8 +78,8 @@ var mapvLayer = new mapv.baiduMapLayer(map, dataSet, options);
     }
 })(jQuery);
 
-var surveyName = $.getUrlParam('name');
-$('#report_title_text').text(surveyName + $('#report_title_text').text());
+var surveyName = 2018; //$.getUrlParam('name');
+//$('#report_title_text').text(surveyName + $('#report_title_text').text());
 //console.log(surveyName);
 
 //localhost:3000/api/surveySubmit/findByName?name=调查问卷02
