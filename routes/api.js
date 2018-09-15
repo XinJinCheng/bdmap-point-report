@@ -21,21 +21,26 @@ router.post('/surveySubmit', function (req, res, next) {
   });
 });
 
-// router.put('/surveySubmit', function (req, res, next) {
+router.put('/surveySubmit', function (req, res, next) {
 
-//   let apiService = new controller.ApiController();
+  let surveySubmits = req.body;
+  if(!Array.isArray(surveySubmits)){
+    res.status(400);
+    res.json("payload must be Array");
+  }
 
-//   let surveySubmits = req.body;
-//   apiService.addSurveySubmits(surveySubmits)
-//   .then(function(feedback){
-//     res.status(200);
-//     res.json(feedback);
-//   })
-//   .catch(function(e){
-//     res.status(400);
-//     res.json(e);
-//   });
-// });
+  let apiService = new controller.ApiController();
+
+  apiService.addSurveySubmits(surveySubmits)
+  .then(function(feedback){
+    res.status(200);
+    res.json(feedback);
+  })
+  .catch(function(e){
+    res.status(400);
+    res.json(e);
+  });
+});
 
 router.post('/surveySubmit/findByName', function (req, res, next) {
 

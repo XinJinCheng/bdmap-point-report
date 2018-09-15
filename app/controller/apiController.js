@@ -55,32 +55,26 @@ class ApiController {
         });
     }
 
-    // addSurveySubmits(params) {
+    addSurveySubmits(params) {
 
-    //     return new Promise(function (resolve, reject) {
+        let _this = this;
+        return new Promise(function (resolve, reject) {
 
-    //         if (!params || params.length < 1) {
-    //             reject("invalid params");
-    //         }
+            let next = params.shift();
+            if(next != undefined){
+                _this.addSurveySubmit(next)
+                .then(function(feedback){
+                    _this.addSurveySubmits(params).then(function(){resolve();}).catch(function(){resolve();});
+                })
+                .catch(function(e){
+                    _this.addSurveySubmits(params).then(function(){resolve();}.catch(function(){resolve();}));
+                });
+            }else{
+                resolve();
+            }
 
-    //         let t = 0, f = 0;
-    //         for(let i = 0; i < params.length; i++){
-    //             this.addSurveySubmit(params[i])
-    //             .then(function(feedback){
-    //                 t++;
-    //             })
-    //             .catch(function(e){
-    //                 f++;
-    //             });
-    //         }
-
-    //         if(f<=0){
-    //             resolve("batch operation complete: " + t + " in total");
-    //         }else{
-    //             reject("batch operation complete with error: " + t + " success, " + f + " failure");
-    //         }
-    //     });
-    // }
+        });
+    }
 
     querySurveySubmitsByName(name) {
 
