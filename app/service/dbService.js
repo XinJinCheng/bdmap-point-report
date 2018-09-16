@@ -42,7 +42,7 @@ class DbService {
             // logger.debug(name);
             let selectTemplate = client.prepare(
                 'SELECT s.`city`, COUNT(*) AS count, p.`x`, p.`y` FROM `submitted_location` AS s LEFT JOIN `city_point` AS p ON s.`city` = p.`city` ' +
-                'WHERE s.`name` = :name AND s.`city` IS NOT NULL AND s.`city` != "" AND p.`x` IS NOT NULL AND p.`y` IS NOT NULL ' +
+                'WHERE s.`name` = :name AND s.`city` IS NOT NULL AND s.`city` != "" ' +
                 'GROUP BY `city`');
 
             client.query(selectTemplate({ name: name }), function (e, rows) {
